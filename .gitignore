@@ -153,8 +153,6 @@ fabric.properties
 # csv data
 input/
 wandb/
-.sh
-.txt
+*.sh
+*.txt
 
-# figures
-fig/
