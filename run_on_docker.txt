@@ -1,1 +1,2 @@
 docker run -it --rm --gpus all -v /home/titoare/Documents/ds/Image_Segmentation:/mounted tensorflow/tensorflow:latest-gpu python3 /mounted/accesslib/train.py
+docker run -it --rm --gpus all -v /project:/mounted tensorflow/tensorflow:latest-gpu python3 /mounted/Image_Segmentation/accesslib/train.py
