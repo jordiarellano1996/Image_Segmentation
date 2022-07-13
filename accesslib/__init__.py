@@ -4,7 +4,7 @@ import os
 class CFG:
     seed = 25
     debug = True  # set debug=False for Full Training
-    debug_cases = 8
+    debug_cases = 10
     if len(os.getcwd().split("/")) > 4:
         base_path = "/home/titoare/Documents/ds/Image_Segmentation/input"
     else:
@@ -16,7 +16,7 @@ class CFG:
     model_name = 'Unet'
     backbone = 'efficientnet-b1'
     img_size = (320, 384)
-    batch_size = 10
+    batch_size = 32
     epochs = 80
     n_fold = 5
 
