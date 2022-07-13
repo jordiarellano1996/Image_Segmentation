@@ -9,8 +9,9 @@ import pandas as pd
 from sklearn.model_selection import StratifiedGroupKFold
 import tensorflow as tf
 from keras.preprocessing.image import ImageDataGenerator
-from accesslib.model.unet import create_model, create_callbacks
 from accesslib import CFG
+from accesslib.model.unet import create_model, create_callbacks
+from accesslib.model.gpu import configure_gpu_memory_allocation, print_devices
 
 """0: Debug, 1: No Info, 2: No info/warnings, 3: No info/warnings/error logged."""
 # os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
@@ -44,20 +45,8 @@ if __name__ == "__main__":
     set_seed(cfg.seed)
 
     # 🚀 Config GPU memory allocation
-    gpus = tf.config.experimental.list_physical_devices('GPU')
-    if gpus:
-        # Restrict TensorFlow to only allocate 10GB of memory on the first GPU
-        try:
-            tf.config.experimental.set_virtual_device_configuration(
-                gpus[0],
-                [tf.config.experimental.VirtualDeviceConfiguration(memory_limit=9000)])
-            logical_gpus = tf.config.experimental.list_logical_devices('GPU')
-            print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPUs")
-        except RuntimeError as e:
-            # Virtual devices must be set before GPUs have been initialized
-            print(e)
-    else:
-        print("No GPU available.")
+    print_devices()
+    configure_gpu_memory_allocation(memory_limit=9000)  # 9GB
 
     # 🚀 Train data
     df = pd.read_csv(os.path.join(cfg.base_path, "train_precomputed.csv"))
