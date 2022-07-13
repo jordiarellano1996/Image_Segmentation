@@ -45,14 +45,19 @@ if __name__ == "__main__":
 
     # 🚀 Config GPU memory allocation
     gpus = tf.config.experimental.list_physical_devices('GPU')
-    print(gpus)
     if gpus:
+        # Restrict TensorFlow to only allocate 10GB of memory on the first GPU
         try:
-            for gpu in gpus:
-                #tf.config.experimental.set_memory_growth(gpu, True)
-                tf.config.experimental.set_per_process_memory_fraction(0.8)
+            tf.config.experimental.set_virtual_device_configuration(
+                gpus[0],
+                [tf.config.experimental.VirtualDeviceConfiguration(memory_limit=10000)])
+            logical_gpus = tf.config.experimental.list_logical_devices('GPU')
+            print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPUs")
         except RuntimeError as e:
+            # Virtual devices must be set before GPUs have been initialized
             print(e)
+    else:
+        print("No GPU available.")
 
     # 🚀 Train data
     df = pd.read_csv(os.path.join(cfg.base_path, "train_precomputed.csv"))
