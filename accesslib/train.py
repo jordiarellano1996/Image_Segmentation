@@ -2,7 +2,7 @@ import os
 import sys
 
 sys.path.append("/mounted/Image_Segmentation")
-print(sys.path)
+
 import numpy as np
 import cv2
 import pandas as pd

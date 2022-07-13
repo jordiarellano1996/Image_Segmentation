@@ -1,5 +1,6 @@
 import os
 
+
 class CFG:
     seed = 25
     debug = True  # set debug=False for Full Training
@@ -15,7 +16,7 @@ class CFG:
     model_name = 'Unet'
     backbone = 'efficientnet-b1'
     img_size = (320, 384)
-    batch_size = 42
+    batch_size = 50
     epochs = 80
     n_fold = 5
 
