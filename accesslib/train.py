@@ -43,6 +43,12 @@ if __name__ == "__main__":
     cfg = CFG()
     set_seed(cfg.seed)
 
+    # 🚀 Config GPU memory allocation
+    config = tf.ConfigProto()
+    config.gpu_options.allow_growth = True  # dynamically grow the memory used on the GPU
+    config.log_device_placement = True  # to log device placement (on which device the operation ran)
+    sess = tf.Session(config=config)
+
     # 🚀 Train data
     df = pd.read_csv(os.path.join(cfg.base_path, "train_precomputed.csv"))
     if cfg.debug:
