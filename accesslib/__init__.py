@@ -16,7 +16,7 @@ class CFG:
     model_name = 'Unet'
     backbone = 'efficientnet-b1'
     img_size = (320, 384)
-    batch_size = 32
+    batch_size = 10
     epochs = 80
     n_fold = 5
 
