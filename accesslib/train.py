@@ -1,39 +1,20 @@
 import os
 import sys
+
+sys.path.append("/mounted")
+
 import numpy as np
 import cv2
 import pandas as pd
-from accesslib.plot_factory.images import show_img
 from sklearn.model_selection import StratifiedGroupKFold
-
-"""0: Debug, 1: No Info, 2: No info/warnings, 3: No info/warnings/error logged."""
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
-# os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 import tensorflow as tf
 from keras.preprocessing.image import ImageDataGenerator
-from accesslib.unet import create_model, create_callbacks
-from accesslib.custom_metrics import bce_dice_loss, dice_coef, iou_coef, jacard_coef
+from accesslib.model.unet import create_model, create_callbacks
+from accesslib import CFG
 
-sys.path.append("/mounted/")
-
-
-class CFG:
-    seed = 25
-    debug = True  # set debug=False for Full Training
-    debug_cases = 8
-    if len(os.getcwd().split("/")) > 4:
-        base_path = "/home/titoare/Documents/ds/image_segmentation/input"
-    else:
-        base_path = "/mounted/input"
-    epochs_path = "/home/titoare/Documents/ds/image_segmentation/accesslib/models"
-    exp_name = 'Baselinev2'
-    comment = 'unet-efficientnet_b1-224x224-aug2-split2'
-    model_name = 'Unet'
-    backbone = 'efficientnet-b1'
-    img_size = (320, 384)
-    batch_size = 16
-    epochs = 80
-    n_fold = 5
+"""0: Debug, 1: No Info, 2: No info/warnings, 3: No info/warnings/error logged."""
+# os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
 
 
 def custom_preprocessing(image_in):
@@ -59,11 +40,8 @@ def set_seed(seed=25):
 
 
 if __name__ == "__main__":
-    # config = tf.compat.v1.ConfigProto()
-    # config.gpu_options.allow_growth = True
-    # session = tf.compat.v1.Session(config=config)
     cfg = CFG()
-    set_seed(CFG.seed)
+    set_seed(cfg.seed)
 
     # 🚀 Train data
     df = pd.read_csv(os.path.join(cfg.base_path, "train_precomputed.csv"))
@@ -149,26 +127,4 @@ if __name__ == "__main__":
 
     )
 
-    model.save(os.path.join(cfg.base_path, 'complete_model3'))
-    from keras.models import load_model
-
-    # if you use custom metrics to evaluate the model, when you loaded you must pass custom objects instead you will
-    # get an error.
-    custom_objects = custom_objects = {
-        'bce_dice_loss': bce_dice_loss,
-        'dice_coef': dice_coef,
-        'iou_coef': iou_coef,
-        "jacard_coef": jacard_coef,
-    }
-    out_model = load_model(os.path.join(cfg.base_path, 'complete_model3'), custom_objects=custom_objects)
-    # pred_mask = out_model.predict(validation_generator_img)
-    # pred_mask = np.uint8(pred_mask > 0.65)
-    #
-    # b = 14
-    # pos = 2
-    # show_img(np.uint8(validation_generator_img[b][pos] * 255))
-    # img = validation_generator_img[b][pos]
-    # img = img.reshape((1, 320, 384, 1))
-    # pred_mask = model.predict(img)
-    # pred_mask = np.uint8(pred_mask > 0.65)
-    # show_img(np.uint8(img[0] * 255), np.uint8(pred_mask[0] * 255))
+    model.save(os.path.join(cfg.base_path, 'complete_model'))

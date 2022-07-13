@@ -4,7 +4,7 @@ Standard Unet
 import tensorflow as tf
 from tensorflow.keras.layers import Conv1D, Conv2D, Conv2DTranspose, MaxPooling2D, Input, Dropout, concatenate
 from tensorflow.keras.callbacks import ModelCheckpoint
-from accesslib.custom_metrics import bce_dice_loss, dice_coef, iou_coef, jacard_coef
+from accesslib.model.custom_metrics import bce_dice_loss, dice_coef, iou_coef, jacard_coef
 
 
 def create_model(n_classes=3, img_height=320, img_width=320, img_channels=1, verbose=True):

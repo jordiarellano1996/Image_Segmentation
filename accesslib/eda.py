@@ -7,19 +7,7 @@ import seaborn as sns
 from accesslib.plot_factory.seaborn import show_values_on_bars
 from accesslib.plot_factory.wandb import create_wandb_plot
 from accesslib.plot_factory.images import show_simple_images, read_image, show_img
-
-
-class CFG:
-    """"""
-    """ Environment check """
-    # warnings.filterwarnings("ignore")
-    os.environ["WANDB_SILENT"] = "true"
-
-    """ Config Variables """
-    base_path = "/home/titoare/Documents/ds/image_segmentation/input"
-    wandb_log = False
-    wandb_config = {'competition': 'AWMadison', '_wandb_kernel': 'aot'}
-    show_figures = True
+from accesslib import CFG
 
 
 class CLR:
