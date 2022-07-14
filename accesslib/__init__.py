@@ -17,7 +17,7 @@ class CFG:
     backbone = 'efficientnet-b1'
     img_size = (320, 384)
     batch_size = 32
-    epochs = 80
+    epochs = 45
     n_fold = 5
 
 

@@ -1,4 +1,4 @@
-""" Print device info"""
+""" GPU configuration """
 import tensorflow as tf
 from tensorflow.python.client import device_lib
 
