@@ -108,7 +108,9 @@ if __name__ == "__main__":
 
     # 🚀 Train
     model = create_model(n_classes=3, img_height=cfg.img_size[0], img_width=cfg.img_size[1], img_channels=1)
-    callbacks = create_callbacks(cfg.epochs_path)
+    callbacks = create_callbacks(cfg.epochs_path,
+                                 wandb_flag=cfg.wandb_callback_flag,
+                                 wandb_test_name=cfg.wandb_test_name)
     history = model.fit(
         train_generator,
         steps_per_epoch=len(train) // cfg.batch_size,
