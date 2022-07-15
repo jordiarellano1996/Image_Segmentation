@@ -106,18 +106,18 @@ def mask_from_segmentation(segmentation, shape):
     return case_mask
 
 
-def get_id_mask(df, ID):
+def get_id_mask(df, id):
     """
     Returns a mask for each case ID. If no segmentation was found, the mask will be empty
     - meaning formed by only 0
-    ID: the case ID from the train.csv file
+    id: the case ID from the train.csv file
     verbose: True if we want any prints
     return: segmentation mask
     """
 
     # ~~~ Get the data ~~~
     # Get the portion of dataframe where we have ONLY the speciffied ID
-    ID_data = df[df["id"] == ID].reset_index(drop=True)
+    ID_data = df[df["id"] == id].reset_index(drop=True)
 
     # Split the dataframe into 3 series of observations
     # each for one speciffic class - "large_bowel", "small_bowel", "stomach"
@@ -150,7 +150,7 @@ def get_id_mask(df, ID):
 
             # If a segmentation is found
             # Append a new channel to the mask
-            if pd.isnull(segmentation) == False:
+            if not pd.isnull(segmentation):
                 mask[..., k] = mask_from_segmentation(segmentation, shape)
     return mask
 

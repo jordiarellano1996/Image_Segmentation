@@ -3,13 +3,14 @@ import sys
 
 sys.path.append("/mounted/Image_Segmentation")
 
+import pickle
 import numpy as np
 import cv2
 import pandas as pd
 from sklearn.model_selection import StratifiedGroupKFold
 import tensorflow as tf
-from keras.preprocessing.image import ImageDataGenerator
 from accesslib import CFG
+from accesslib.model.image_generator import MyCustomImageGenerator
 from accesslib.model.unet import create_model, create_callbacks
 from accesslib.model.gpu import configure_gpu_memory_allocation, print_devices
 
@@ -46,6 +47,7 @@ if __name__ == "__main__":
 
     # 🚀 Config GPU memory allocation
     print_devices()
+    """ This next line is not working has function, It might be the code here instead of func."""
     configure_gpu_memory_allocation(memory_limit=9000)  # 9GB
 
     # 🚀 Train data
@@ -86,37 +88,22 @@ if __name__ == "__main__":
 
     del fold, train_idx, val_idx, skf
 
+    with open(os.path.join(cfg.base_path, "cv_index"), "wb") as fp:
+        pickle.dump(cross_index, fp)
+
     """ Using on fold """
     fold = 0
     train = df.iloc[cross_index[fold][0]]
     validation = df.iloc[cross_index[fold][1]]
 
-    """
-    SEED--> So that image_generator and mask_generator will rotate and shuffle equivalently.
-    In this situation the segmentation output is 'rgb' three channels, if the segmentation where > 3 channel I think
-    this method would not work.
-    """
-    datagen = ImageDataGenerator(rescale=None, preprocessing_function=custom_preprocessing)
-    train_generator_img = datagen.flow_from_dataframe(train, x_col='path', y_col="path_mask",
-                                                      color_mode="grayscale",
-                                                      batch_size=cfg.batch_size, class_mode=None,
-                                                      target_size=cfg.img_size, seed=cfg.seed, shuffle=True)
-    train_generator_mask = datagen.flow_from_dataframe(train, x_col='path_mask', y_col="path", color_mode="rgb",
-                                                       batch_size=cfg.batch_size, class_mode=None,
-                                                       target_size=cfg.img_size, seed=cfg.seed, shuffle=True)
-
+    """ Getting generators"""
+    generator_engine = MyCustomImageGenerator(cfg.batch_size, cfg.img_size)
+    train_generator_img, train_generator_mask = generator_engine.get_img_mask_generator(train, "path", "path_mask",
+                                                                                        cfg.seed, True)
     train_generator = zip(train_generator_img, train_generator_mask)
-
-    datagen = ImageDataGenerator(rescale=None, preprocessing_function=custom_preprocessing)
-    validation_generator_img = datagen.flow_from_dataframe(validation, x_col='path', y_col="path_mask",
-                                                           color_mode="grayscale",
-                                                           batch_size=cfg.batch_size, class_mode=None,
-                                                           target_size=cfg.img_size, seed=cfg.seed, shuffle=True)
-    validation_generator_mask = datagen.flow_from_dataframe(validation, x_col='path_mask', y_col="path",
-                                                            color_mode="rgb",
-                                                            batch_size=cfg.batch_size, class_mode=None,
-                                                            target_size=cfg.img_size, seed=cfg.seed, shuffle=True)
-
+    validation_generator_img, validation_generator_mask = generator_engine.get_img_mask_generator(validation, "path",
+                                                                                                  "path_mask", cfg.seed,
+                                                                                                  True)
     validation_generator = zip(validation_generator_img, validation_generator_mask)
 
     # 🚀 Train
@@ -132,4 +119,4 @@ if __name__ == "__main__":
 
     )
 
-    model.save(os.path.join(cfg.base_path, 'complete_model'))
+    model.save(os.path.join(cfg.epochs_path, 'complete_model'))

@@ -1,6 +1,6 @@
 # UW-Madison GI Tract Image Segmentation.
 ## Introduction
-Track healthy organs in medical scans to improve cancer treatment
+Track healthy organs in medical scans to improve cancer treatment.
 ## Technologies
 <ul>
   <li>Python</li>

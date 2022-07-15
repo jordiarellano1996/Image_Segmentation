@@ -153,6 +153,7 @@ fabric.properties
 # csv data
 input/
 wandb/
+train_results/
 *.sh
 *.txt
 

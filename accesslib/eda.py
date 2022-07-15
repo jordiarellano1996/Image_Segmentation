@@ -7,7 +7,13 @@ import seaborn as sns
 from accesslib.plot_factory.seaborn import show_values_on_bars
 from accesslib.plot_factory.wandb import create_wandb_plot
 from accesslib.plot_factory.images import show_simple_images, read_image, show_img
-from accesslib import CFG
+
+
+class EDACONFIG:
+    wandb_log = False
+    wandb_config = {'competition': 'AWMadison', }
+    base_path = "/home/titoare/Documents/ds/Image_Segmentation/input"
+    show_figures = True
 
 
 class CLR:
@@ -34,21 +40,22 @@ def save_dataset_artifact(run_name, artifact_name, path, cfg_wandb_config):
 
 
 if __name__ == "__main__":
-    cfg = CFG()
+    cfg = EDACONFIG()
     clr = CLR()
-    wandb.login(key="52fb822f6a358eedc0a801169d4b00b63ffa125f")
 
     """ 🤫 Experiment 1: Explore train csv data. """
     # 🐝 Log Cover Photo
     if cfg.wandb_log:
-        run = wandb.init(project='AWMadison', name='CoverPhoto', config=cfg.wandb_config)
-        cover = plt.imread("/home/titoare/Documents/ds/image_segmentation/input/cover.png")
-        wandb.log({"example": wandb.Image(cover)})
+        wandb.login(relogin=True, key="52fb822f6a358eedc0a801169d4b00b63ffa125f")
+        run = wandb.init(project="ImageSegmentation", name='CoverPhoto', config=cfg.wandb_config)
+        cover = plt.imread("/home/titoare/Pictures/cover_photo.png")
+        wandb.log({"Competition cover photo": wandb.Image(cover)})
         wandb.finish()
 
     # 🚀 Train data shape info
     train = pd.read_csv(os.path.join(cfg.base_path, "train_precomputed.csv"))
-
+    train["path"].replace("/home/titoare/Documents/ds/image_segmentation/input", cfg.base_path, regex=True, inplace=True)
+    train["path_mask"].replace("/home/titoare/Documents/ds/image_segmentation/input", cfg.base_path, regex=True, inplace=True)
     print(clr.S + "shape:" + clr.E, train.shape)
     print(clr.S + "Unique ID cases:" + clr.E, train["id"].nunique())
     print(clr.S + "Missing Values Column:" + clr.E, train.isna().sum().index[2])
@@ -251,5 +258,3 @@ if __name__ == "__main__":
     show_simple_images(img_paths[20:30], mask[20:30])
     show_simple_images(img_paths[30:40], mask[30:40])
     show_simple_images(img_paths[40:50], mask[40:50])
-
-

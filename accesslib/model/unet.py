@@ -95,7 +95,7 @@ def create_callbacks(path):
     """"""
     # tensorboard = TensorBoard(log_dir=path + log_name)
 
-    filename = "RNN_Final-{epoch:02d}-{loss:.3f}"
+    filename = "/RNN_Final-{epoch:02d}-{loss:.5f}"
     checkpoint = ModelCheckpoint("{}{}.model".format(path, filename,
                                                      monitor='loss',
                                                      verbose=1,
