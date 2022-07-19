@@ -68,12 +68,12 @@ if __name__ == "__main__":
         'iou_coef': iou_coef,
         "jacard_coef": jacard_coef,
     }
-    out_model = load_model("/home/titoare/Documents/ds/Image_Segmentation/train_results/debug_14_07/complete_model",
+    out_model = load_model("/home/titoare/Documents/ds/Image_Segmentation/train_results/debug_False_19_07_2022/complete_model",
                            custom_objects=custom_objects)
 
     # 🚀 Evaluate
     b = 4
-    pos = 8
+    pos = 9
     img = train_generator_img[b][pos]
     mask = train_generator_mask[b][pos]
     show_img(np.uint8(img * 255), np.uint8(mask * 255))

@@ -33,3 +33,19 @@ def create_wandb_hist(x_data=None, x_name=None, title=None, log=None):
     data = [[x] for x in x_data]
     table = wandb.Table(data=data, columns=[x_name])
     wandb.log({log: wandb.plot.histogram(table, x_name, title=title)})
+
+
+def save_dataset_artifact(artifact_name, path):
+    """
+    Saves dataset to W&B Artifactory.
+    project_name: name of project you are working on.
+    run_name: name of the experiment
+    artifact_name: under what name should the dataset be stored
+    path: path to the dataset
+    """
+
+    artifact = wandb.Artifact(name=artifact_name,
+                              type='dataset')
+    artifact.add_file(path)
+    wandb.log_artifact(artifact)
+    print("Artifact has been saved successfully.")

@@ -21,18 +21,9 @@ Track healthy organs in medical scans to improve cancer treatment.
   and non-empty mask cases.</li>
 </ul>
 
-## Output  examples:
+## 🚀Wandb report
+Check results on: https://wandb.ai/jordiarellano1996/ImageSegmentation/reports/-AW-Madison-EDA-UNET-Train--VmlldzoyMzM1MjA3?accessToken=n56f735rghx5d20kos3vlp435ek8tq9qntdw5qjoenvkjfpg0djlm2f6ytqf8nzk
 
-[//]: # (![Alt text]&#40;predicted_images/02.png "Optional title"&#41;)
 
-[//]: # (![Alt text]&#40;predicted_images/14.png "Optional title"&#41;)
-
-[//]: # (![Alt text]&#40;predicted_images/15.png "Optional title"&#41;)
-
-[//]: # (![Alt text]&#40;predicted_images/08.png "Optional title"&#41;)
-
-[//]: # (![Alt text]&#40;predicted_images/09.png "Optional title"&#41;)
-
-[//]: # (![Alt text]&#40;predicted_images/11.png "Optional title"&#41;)
 
 

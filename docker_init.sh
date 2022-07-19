@@ -6,4 +6,5 @@ pip3 install pandas
 pip3 install opencv-python
 pip3 install -U scikit-learn
 pip3 install pillow
+pip3 install wandb
 

@@ -5,7 +5,7 @@ import wandb
 import matplotlib.pyplot as plt
 import seaborn as sns
 from accesslib.plot_factory.seaborn import show_values_on_bars
-from accesslib.plot_factory.wandb import create_wandb_plot
+from accesslib.plot_factory.wandb import create_wandb_plot, save_dataset_artifact
 from accesslib.plot_factory.images import show_simple_images, read_image, show_img
 
 
@@ -19,24 +19,6 @@ class EDACONFIG:
 class CLR:
     S = '\033[1m' + '\033[92m'
     E = '\033[0m'
-
-
-def save_dataset_artifact(run_name, artifact_name, path, cfg_wandb_config):
-    '''Saves dataset to W&B Artifactory.
-    run_name: name of the experiment
-    artifact_name: under what name should the dataset be stored
-    path: path to the dataset'''
-
-    run = wandb.init(project='AWMadison',
-                     name=run_name,
-                     config=cfg_wandb_config)
-    artifact = wandb.Artifact(name=artifact_name,
-                              type='dataset')
-    artifact.add_file(path)
-
-    wandb.log_artifact(artifact)
-    wandb.finish()
-    print("Artifact has been saved successfully.")
 
 
 if __name__ == "__main__":
@@ -54,8 +36,10 @@ if __name__ == "__main__":
 
     # 🚀 Train data shape info
     train = pd.read_csv(os.path.join(cfg.base_path, "train_precomputed.csv"))
-    train["path"].replace("/home/titoare/Documents/ds/image_segmentation/input", cfg.base_path, regex=True, inplace=True)
-    train["path_mask"].replace("/home/titoare/Documents/ds/image_segmentation/input", cfg.base_path, regex=True, inplace=True)
+    train["path"].replace("/home/titoare/Documents/ds/image_segmentation/input", cfg.base_path, regex=True,
+                          inplace=True)
+    train["path_mask"].replace("/home/titoare/Documents/ds/image_segmentation/input", cfg.base_path, regex=True,
+                               inplace=True)
     print(clr.S + "shape:" + clr.E, train.shape)
     print(clr.S + "Unique ID cases:" + clr.E, train["id"].nunique())
     print(clr.S + "Missing Values Column:" + clr.E, train.isna().sum().index[2])
@@ -67,7 +51,7 @@ if __name__ == "__main__":
     print(train.sample(5, random_state=26))
     # 🐝
     if cfg.wandb_log:
-        run = wandb.init(project='AWMadison', name='data_explore', config=cfg.wandb_config)
+        run = wandb.init(project='ImageSegmentation', name='data_explore', config=cfg.wandb_config)
         wandb.log({"train_len": train.shape[0],
                    "train_cols": train.shape[1],
                    "segmentation_no": len(train[train["segmentation"].isna() == False]),
@@ -218,17 +202,15 @@ if __name__ == "__main__":
         # 🐝 End Experiment
         wandb.finish()
         # 🐝 Save train.csv as artifact
-        save_dataset_artifact(run_name="save_train",
+        save_dataset_artifact(project_name="ImageSegmentation",
+                              run_name="save_train",
                               artifact_name="train",
-                              path="/home/titoare/Documents/ds/image_segmentation/input/train_w.csv",
+                              path="/home/titoare/Documents/ds/Image_Segmentation/input/train_precomputed.csv",
                               cfg_wandb_config=cfg.wandb_config)
 
     """ 🤫 Experiment 2: Explore png images and their mask. """
     #  🚀️ Case image view
-    if cfg.wandb_log:
-        run = wandb.init(project='AWMadison', name='make_masks', config=cfg.wandb_config)
-
-    CASE = "case123"
+    CASE = "case23"
 
     # Sample a few images from speciffied case
     sample_paths = train[(train["segmentation"].isna() == False) & (train["case"] == CASE)]["path"] \
@@ -254,7 +236,7 @@ if __name__ == "__main__":
     img_paths = data.path.values
     mask_paths = data.path_mask.values
     mask = [np.load(path) for path in mask_paths]
-    show_simple_images(img_paths[10:20], mask[10:20])
+    plt = show_simple_images(img_paths[10:20], mask[10:20])
     show_simple_images(img_paths[20:30], mask[20:30])
     show_simple_images(img_paths[30:40], mask[30:40])
     show_simple_images(img_paths[40:50], mask[40:50])
