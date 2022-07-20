@@ -11,7 +11,7 @@ from sklearn.model_selection import StratifiedGroupKFold
 import tensorflow as tf
 from accesslib import CFG
 from accesslib.model.image_generator import MyCustomImageGenerator
-from accesslib.model.unet import create_model, create_callbacks
+from accesslib.model.unet import create_model, create_callbacks, create_model_filter_division_2
 from accesslib.model.gpu import configure_gpu_memory_allocation, print_devices
 
 """0: Debug, 1: No Info, 2: No info/warnings, 3: No info/warnings/error logged."""
@@ -107,10 +107,11 @@ if __name__ == "__main__":
     validation_generator = zip(validation_generator_img, validation_generator_mask)
 
     # 🚀 Train
-    model = create_model(n_classes=3, img_height=cfg.img_size[0], img_width=cfg.img_size[1], img_channels=1)
+    model = create_model_filter_division_2(n_classes=3, img_height=cfg.img_size[0], img_width=cfg.img_size[1], img_channels=1)
     callbacks = create_callbacks(cfg.epochs_path,
                                  wandb_flag=cfg.wandb_callback_flag,
-                                 wandb_test_name=cfg.wandb_test_name)
+                                 wandb_test_name=cfg.wandb_test_name,
+                                 wandb_batch_size=cfg.batch_size)
     history = model.fit(
         train_generator,
         steps_per_epoch=len(train) // cfg.batch_size,

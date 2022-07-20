@@ -72,8 +72,8 @@ if __name__ == "__main__":
                            custom_objects=custom_objects)
 
     # 🚀 Evaluate
-    b = 4
-    pos = 9
+    b = 10
+    pos = 20
     img = train_generator_img[b][pos]
     mask = train_generator_mask[b][pos]
     show_img(np.uint8(img * 255), np.uint8(mask * 255))
@@ -82,3 +82,7 @@ if __name__ == "__main__":
     pred_mask = out_model.predict(img)
     pred_mask = np.uint8(pred_mask > 0.75)
     show_img(np.uint8(img[0] * 255), np.uint8(pred_mask[0] * 255))
+
+
+
+

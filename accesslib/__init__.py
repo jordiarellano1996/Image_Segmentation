@@ -5,7 +5,7 @@ class CFG:
     seed = 25
     debug = False  # set debug=False for Full Training
     wandb_callback_flag = True
-    wandb_test_name = "train_15_07_2022"
+    wandb_test_name = "train_20_07_2022_unet_filter_division_2"
     debug_cases = 10
     if len(os.getcwd().split("/")) > 4:
         base_path = "/home/titoare/Documents/ds/Image_Segmentation/input"
